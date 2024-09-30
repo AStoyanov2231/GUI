@@ -1,31 +1,26 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TextPanel {
+public class TextPanel extends RoundedPanel {
 
-    private JPanel panel;
     private JTextArea textArea;
     private RoundedTextField textField;
     private RoundedButton button;
 
     public TextPanel() {
-        panel = new RoundedPanel(30, 30);
-        panel.setLayout(new BorderLayout());
-        panel.setBounds(200, 50, 600, 550);
+        super(30, 30);
 
-        initializeTextArea();
-        initializeInputPanel();
-    }
+        // Set a preferred size for the entire panel
+        setPreferredSize(new Dimension(400, 200)); // Width: 400, Height: 200
 
-    private void initializeTextArea() {
-        JPanel textAreaPanel = PanelFactory.createTextAreaPanel();
-        textAreaPanel.setOpaque(false);
+        setLayout(new BorderLayout());
 
-        textArea = new JTextArea(20, 50);
+        textArea = new JTextArea(5, 5);
         textArea.setEditable(false);
         textArea.setOpaque(false);
-        textArea.setBackground(Color.white);
+        textArea.setBackground(null);
         textArea.setForeground(Color.black);
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
@@ -37,37 +32,56 @@ public class TextPanel {
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        textAreaPanel.add(scrollPane, BorderLayout.CENTER);
-        panel.add(textAreaPanel, BorderLayout.CENTER);
-    }
+        add(scrollPane, BorderLayout.CENTER);
 
-    private void initializeInputPanel() {
-        JPanel inputPanel = PanelFactory.createInputPanel();
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridBagLayout());
         inputPanel.setOpaque(false);
 
+        GridBagConstraints gbcTextField = new GridBagConstraints();
+        gbcTextField.gridx = 0;
+        gbcTextField.gridy = 0;
+        gbcTextField.weightx = 1;
+        gbcTextField.fill = GridBagConstraints.HORIZONTAL;
+        gbcTextField.insets = new Insets(5, 5, 5, 5); // Padding
+
         textField = new RoundedTextField(35, 30, 40);
-        button = new RoundedButton("Show text", 30, 30);
+        textField.setMinimumSize(new Dimension(200, 30));
+        textField.setPreferredSize(new Dimension(200, 30));
+
+        inputPanel.add(textField, gbcTextField);
+
+        GridBagConstraints gbcButton = new GridBagConstraints();
+        gbcButton.gridx = 1;
+        gbcButton.gridy = 0;
+        gbcButton.weightx = 0;
+        gbcButton.fill = GridBagConstraints.NONE;
+        gbcButton.insets = new Insets(5, 5, 5, 5); // Padding
+
+        button = new RoundedButton("Add Text", 30, 30);
         button.setFocusPainted(false);
+        button.setPreferredSize(new Dimension(100, 30));
 
-        ActionListener addTextAction = e -> addText();
+        inputPanel.add(button, gbcButton);
 
-        button.addActionListener(addTextAction);
-        textField.addActionListener(addTextAction);
+        add(inputPanel, BorderLayout.SOUTH);
 
-        inputPanel.add(textField);
-        inputPanel.add(button);
-        panel.add(inputPanel, BorderLayout.SOUTH);
+        button.addActionListener(new AddTextAction());
+        textField.addActionListener(new AddTextAction());
     }
 
-    private void addText() {
-        if (!textField.getText().isEmpty()) {
-            String inputText = textField.getText();
-            textArea.append(inputText + "\n");
-            textField.setText("");
+    private class AddTextAction implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String inputText = textField.getText().trim();
+            if (!inputText.isEmpty()) {
+                textArea.append(inputText + "\n");
+                textField.setText("");
+            }
         }
     }
 
     public JPanel getPanel() {
-        return panel;
+        return this;
     }
 }
