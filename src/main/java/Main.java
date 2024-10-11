@@ -1,11 +1,12 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Main {
     public static void main(String[] args) {
-        // Create the main frame
+
         JFrame frame = new JFrame();
         frame.setUndecorated(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -13,19 +14,51 @@ public class Main {
         frame.setMinimumSize(new Dimension(400, 400));
         frame.setLocationRelativeTo(null);
 
+        Border border = BorderFactory.createLineBorder(Color.black, 3);
 
-        /////////////////////////////////////////////////////////////////
-        RoundedPanel chatBoxPanel = new RoundedPanel(45);
+        RoundedPanel chatBoxHolder = new RoundedPanel(45);
+        chatBoxHolder.setBackground(Color.lightGray);
+        chatBoxHolder.setPreferredSize(new Dimension(600, 550));
+        chatBoxHolder.setLayout(new BorderLayout());
+
+        JTextArea messageArea = new JTextArea();
+        messageArea.setEditable(false);
+        messageArea.setBackground(new Color(0, 0, 0, 0));
+        messageArea.setForeground(Color.BLACK);
+        messageArea.setOpaque(false);
+        messageArea.setLineWrap(true);
+        messageArea.setWrapStyleWord(true);
+
+        JScrollPane scrollPane = new JScrollPane(messageArea);
+        scrollPane.setBorder(null);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+        chatBoxHolder.add(scrollPane, BorderLayout.CENTER);
+
+        JTextField inputField = new JTextField();
+        chatBoxHolder.add(inputField, BorderLayout.SOUTH);
+
+        JPanel chatBoxPanel = new JPanel();
         chatBoxPanel.setBackground(Color.GRAY);
+        chatBoxPanel.add(chatBoxHolder);
 
-        JPanel FriendListPanel = new JPanel();
-        FriendListPanel.setBackground(Color.cyan);
-        FriendListPanel.setPreferredSize(new Dimension(50,0));
+        JPanel settingsPanel = new JPanel();
+        settingsPanel.setBackground(Color.white);
+        settingsPanel.add(new Label("Settings panel"));
+
+        JPanel otherPanel = new JPanel();
+        otherPanel.setBackground(Color.white);
+        otherPanel.add(new Label("Other Panel"));
+
+        JPanel friendListPanel = new JPanel();
+        friendListPanel.setBackground(Color.cyan);
+        friendListPanel.setPreferredSize(new Dimension(50, 0));
 
         // Title bar panel
         JPanel titleBar = new JPanel();
         titleBar.setBackground(Color.LIGHT_GRAY);
-        titleBar.setLayout(new FlowLayout(FlowLayout.RIGHT, 2, 0));
+        titleBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
         FrameDragListener frameDragListener = new FrameDragListener(frame);
         titleBar.addMouseListener(frameDragListener);
@@ -38,6 +71,7 @@ public class Main {
         minimizeLabel.setHorizontalAlignment(JLabel.CENTER);
         minimizeLabel.setVerticalAlignment(JLabel.CENTER);
         minimizeLabel.setFont(new Font("MV Boli", Font.PLAIN, 20));
+        minimizePanel.setBorder(border);
         minimizePanel.add(minimizeLabel);
         minimizePanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
@@ -47,6 +81,7 @@ public class Main {
         exitLabel.setHorizontalAlignment(JLabel.CENTER);
         exitLabel.setVerticalAlignment(JLabel.CENTER);
         exitLabel.setFont(new Font("MV Boli", Font.PLAIN, 20));
+        exitPanel.setBorder(border);
         exitPanel.add(exitLabel);
         exitPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
@@ -75,7 +110,7 @@ public class Main {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                minimizePanel.setBackground(Color.GRAY);
+                minimizePanel.setBackground(Color.cyan);
             }
 
             @Override
@@ -129,8 +164,8 @@ public class Main {
 
         // Create a new panel to place between yellow and blue panels
         JPanel separatorPanel = new JPanel();
-        separatorPanel.setBackground(Color.LIGHT_GRAY); // You can change the color if needed
-        separatorPanel.setPreferredSize(new Dimension(10, 0)); // Set width (10 pixels) and height (0 for default)
+        separatorPanel.setBackground(Color.LIGHT_GRAY);
+        separatorPanel.setPreferredSize(new Dimension(10, 0));
 
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BorderLayout());
@@ -140,10 +175,22 @@ public class Main {
         // Add the separator panel to the mainPanel between outerChatBox and wrapperPanel
         mainPanel.add(wrapperPanel, BorderLayout.WEST);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
-        mainPanel.add(FriendListPanel, BorderLayout.EAST);
+        mainPanel.add(friendListPanel, BorderLayout.EAST);
 
         frame.add(mainPanel);
+
+        button1.addActionListener(e -> switchPanel(centerPanel, chatBoxPanel));
+        button2.addActionListener(e -> switchPanel(centerPanel, settingsPanel));
+        button3.addActionListener(e -> switchPanel(centerPanel, otherPanel));
+
         frame.setVisible(true);
+    }
+
+    private static void switchPanel(JPanel centerPanel, JPanel newPanel) {
+        centerPanel.removeAll();
+        centerPanel.add(newPanel, BorderLayout.CENTER);
+        centerPanel.revalidate();
+        centerPanel.repaint();
     }
 
     public static class FrameDragListener extends MouseAdapter {
