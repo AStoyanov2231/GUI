@@ -71,7 +71,6 @@ public class GUILogic {
 
         frame.add(mainPanel);
 
-        // Set up button actions
         buttons.getButton1().addActionListener(e -> switchPanel(chatBoxPanel));
         buttons.getButton2().addActionListener(e -> switchPanel(settingsPanel));
         buttons.getButton3().addActionListener(e -> switchPanel(otherPanel));
