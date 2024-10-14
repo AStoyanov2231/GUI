@@ -70,7 +70,7 @@ public class PanelFactory {
         titleBar.setBackground(Color.LIGHT_GRAY);
         titleBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
-        Main.FrameDragListener frameDragListener = new Main.FrameDragListener(frame);
+        GUILogic.FrameDragListener frameDragListener = new GUILogic.FrameDragListener(frame);
         titleBar.addMouseListener(frameDragListener);
         titleBar.addMouseMotionListener(frameDragListener);
 
