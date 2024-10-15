@@ -1,3 +1,5 @@
+import Services.FrameDragListener;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -70,7 +72,7 @@ public class PanelFactory {
         titleBar.setBackground(Color.LIGHT_GRAY);
         titleBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
-        GUILogic.FrameDragListener frameDragListener = new GUILogic.FrameDragListener(frame);
+        FrameDragListener frameDragListener = new FrameDragListener(frame);
         titleBar.addMouseListener(frameDragListener);
         titleBar.addMouseMotionListener(frameDragListener);
 

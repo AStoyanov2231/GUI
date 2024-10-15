@@ -56,14 +56,9 @@ public class GUILogic {
 
         wrapperPanel.add(innerPanel, gbc);
 
-        JPanel separatorPanel = new JPanel();
-        separatorPanel.setBackground(Color.LIGHT_GRAY);
-        separatorPanel.setPreferredSize(new Dimension(10, 0));
-
         centerPanel = new JPanel();
         centerPanel.setLayout(new BorderLayout());
         centerPanel.add(chatBoxPanel, BorderLayout.CENTER);
-        centerPanel.add(separatorPanel, BorderLayout.WEST);
 
         mainPanel.add(wrapperPanel, BorderLayout.WEST);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -83,27 +78,5 @@ public class GUILogic {
         centerPanel.add(newPanel, BorderLayout.CENTER);
         centerPanel.revalidate();
         centerPanel.repaint();
-    }
-
-    public static class FrameDragListener extends MouseAdapter {
-        private final JFrame frame;
-        private Point mouseDownCompCords = null;
-
-        public FrameDragListener(JFrame frame) {
-            this.frame = frame;
-        }
-
-        public void mouseReleased(MouseEvent e) {
-            mouseDownCompCords = null;
-        }
-
-        public void mousePressed(MouseEvent e) {
-            mouseDownCompCords = e.getPoint();
-        }
-
-        public void mouseDragged(MouseEvent e) {
-            Point currCords = e.getLocationOnScreen();
-            frame.setLocation(currCords.x - mouseDownCompCords.x, currCords.y - mouseDownCompCords.y);
-        }
     }
 }
